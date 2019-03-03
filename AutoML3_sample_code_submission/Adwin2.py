@@ -33,15 +33,17 @@ class Adwin2:
                 buckets = self.adBucketsList.head
                 while buckets.next is not None:
                     buckets = buckets.next
-                    isExit = False
-                    while not isExit and buckets.prev is not None:
-                        bucketsList = buckets.getBuckets()
-                        for i in range(buckets.count()-1,0):
-                            n0 += bucketsList[i].incCapacity
-                            n1 += bucketsList[i].incCapacity
-                            sum0 += bucketsList[i].incCapacity
-                            sum1 += bucketsList[i].incCapacity
-                            mudiff = (sum0 / n0) - (sum1 / n1)
+                isExit = False
+                while not isExit and buckets.prev is not None:
+                        bucketsList = buckets.buckets
+                        for i in range(buckets.count()-1,-1,-1):
+                            n0 += bucketsList[i].capacity
+                            n1 += bucketsList[i].capacity
+                            sum0 += bucketsList[i].content
+                            sum1 += bucketsList[i].content
+                            mudiff=0.0
+                            if n1 !=0 and n0!=0:
+                                mudiff = (sum0 / n0) - (sum1 / n1)
                             if n0 > self.minWindowLength  and n1 > self.minWindowLength and self.epsilon(n0, n1, mudiff):
                                 deletedBucket = self.adBucketsList.deleteLastBucket()
                                 self.windowLength -= deletedBucket.count()
@@ -50,6 +52,7 @@ class Adwin2:
                                 isExit = True
                                 reducedWindowLengthFlag = True
                                 break
+                        buckets = buckets.prev        
             return isChanged
 
 
