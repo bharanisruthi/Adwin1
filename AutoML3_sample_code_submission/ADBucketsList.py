@@ -34,10 +34,14 @@ class ADBucketsList(object):
             compressedBucket.capacity = b0.capacity+b1.capacity
             self.addInputAtNextBucket(head, head.next, compressedBucket)
 
-            for i in range(self.M-2):
-                head.buckets[i]= head.buckets[i+2]
+            for i in range(self.M-1):
+                head.buckets[i].content= head.buckets[i+2].content
+                head.buckets[i].capacity = head.buckets[i + 2].capacity
+                head.buckets[i+2].content = 0.0
+                head.buckets[i+2].capacity = 0
 
             head.count-=2
+            head.sum-=compressedBucket.content
 
         self.checkForCompression(head.next)
 
