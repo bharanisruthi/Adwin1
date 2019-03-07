@@ -108,7 +108,7 @@ from os.path import join
 
 
 
-root_dir = pwd() # e.g. '../' or pwd()
+root_dir = "/Users/SruthiNaresh/Documents/NIPS/AutoML3_starting_kit"# e.g. '../' or pwd()
 print(root_dir)
 default_input_dir = join(root_dir, "AutoML3_sample_data")
 default_output_dir = join(root_dir, "AutoML3_sample_predictions")
@@ -222,7 +222,7 @@ if __name__=="__main__" and debug_mode<4:
         # ======== Creating a data object with data, informations about it
         vprint( verbose,  "========= Reading and converting data ==========")
         D = DataManager(basename, input_dir, replace_missing=False, max_samples=max_samples, verbose=verbose,testdata=0)	
-        #print(D.info)
+        print("D.info:",D.info)
         vprint( verbose,  "[+] Size of uploaded data  %5.2f bytes" % data_io.total_size(D))
 
          
@@ -256,9 +256,11 @@ if __name__=="__main__" and debug_mode<4:
         vprint( verbose,  "***************************************************")
         modelname = os.path.join(submission_dir,basename)
 
-	
+	    ####code added by us
+        row_num =D.info["train_num"]
+        print("row_num",row_num)
 	# Train the model in the available training batches
-        for k in range(D.n_trainbatches):		
+        for k in range(D.n_trainbatches):
                 M.fit(D.data[k], D.label[k],D.info,time_info) 
 	
 

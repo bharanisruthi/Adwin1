@@ -17,18 +17,19 @@ import os
 from sys import argv
 from os import getcwd as pwd
 
-import libscores
-import my_metric
+from AutoML3_scoring_program  import libscores
+from AutoML3_scoring_program import my_metric
 import yaml
-from libscores import *
+from AutoML3_scoring_program.libscores import *
 
 # Default I/O directories:
-root_dir = pwd()      # e.g. '../' or pwd()
+root_dir = "/Users/SruthiNaresh/Documents/NIPS/AutoML3_starting_kit"      # e.g. '../' or pwd()
 from os.path import join
 #default_solution_dir = join(root_dir, "AutoML3_sample_data/*/")
 default_solution_dir = join(root_dir, "AutoML3_sample_data")
 default_prediction_dir = join(root_dir, "AutoML3_sample_predictions")
 default_score_dir = join(root_dir, "AutoML3_scoring_output")
+print("default_solution_dir",default_solution_dir)
 
 # Debug flag 0: no debug, 1: show all scores, 2: also show version amd listing of dir
 debug_mode = 1
