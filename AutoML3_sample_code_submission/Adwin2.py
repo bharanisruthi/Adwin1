@@ -10,18 +10,36 @@ class Adwin2:
         self.minT = 35
         self.delta = 0.02
         self.minWindowLength = 10
-        self.M = 5
+        self.M = 2
         self.adBucketsList = None
         self.windowSum = 0
 
+    def insertInput(self, value):
+        if self.adBucketsList is None:
+            self.adBucketsList = ADBucketsList()
+        self.windowLength += 1
+        self.t += 1
+        self.windowSum += value
+        self.adBucketsList.addAnInput(value)
+        winDowMean = self.windowSum / self.windowLength
+        print()
+        return self.isChangeDetected()
+
     def epsilon(self,n0,n1,delta):
-        harmonic_mean = (stats.hmean([ n0 , n1 ]))/(n0+n1)
-        deltaDash = delta/math.sum(n0,n1)
-        epsiloncut = math.sqrt((1/2*harmonic_mean)*math.log(4/deltaDash))
-        return epsiloncut
+        m = 1.0 / ((1.0 / n0) + (1.0 / n1))
+        deltaDash = abs(delta)/(n0+n1)
+        logValue = math.log((4 /deltaDash))
+        epsiloncut = math.sqrt((1/(2*m))*logValue)
+        print("epsiloncut",epsiloncut)
+        return abs(delta) > epsiloncut
 
     def isChangeDetected(self):
         isChanged = False
+        print('--------------------------------------------------------------------------')
+        print('t:', self.t)
+        print('windowLength:', self.windowLength)
+        self.adBucketsList.printBuckets()
+        print('--------------------------------------------------------------------------')
         if (self.t % self.minT == 0 and self.windowLength >= self.minWindowLength):
             reducedWindowLengthFlag = True
             while (reducedWindowLengthFlag):
@@ -34,36 +52,37 @@ class Adwin2:
                 while buckets.next is not None:
                     buckets = buckets.next
                 isExit = False
+                j = self.adBucketsList.level
                 while not isExit and buckets.prev is not None:
                         bucketsList = buckets.buckets
-                        for i in range(buckets.count()-1,-1,-1):
+                        for i in range(buckets.count-1,-1,-1):
                             n0 += bucketsList[i].capacity
-                            n1 += bucketsList[i].capacity
+                            n1 -= bucketsList[i].capacity
+                            print("n0",n0)
+                            print("n1",n1)
                             sum0 += bucketsList[i].content
-                            sum1 += bucketsList[i].content
-                            mudiff=0.0
-                            if n1 !=0 and n0!=0:
+                            sum1 -= bucketsList[i].content
+                            print("sum0", sum0)
+                            print("sum1", sum1)
+                            #mudiff=0.0
+                            if n1 is not 0 and n0 is not 0:
                                 mudiff = (sum0 / n0) - (sum1 / n1)
                             if n0 > self.minWindowLength  and n1 > self.minWindowLength and self.epsilon(n0, n1, mudiff):
                                 deletedBucket = self.adBucketsList.deleteLastBucket()
-                                self.windowLength -= deletedBucket.count()
+                                self.windowLength -= deletedBucket.count
                                 self.windowSum -= deletedBucket.sum
                                 isChanged = True
                                 isExit = True
                                 reducedWindowLengthFlag = True
                                 break
-                        buckets = buckets.prev        
-            return isChanged
+                        buckets = buckets.prev
+
+        return isChanged
 
 
 
 
-    def insertInput(self, value):
-        if self.adBucketsList is None:
-            self.adBucketsList = ADBucketsList()
-        self.adBucketsList.addAnInput(value)
-        self.windowLength+=1
-        self.t+=1
-        self.windowSum+=value
-        winDowMean = self.windowSum / self.windowLength
-        return self.isChangeDetected()
+
+
+
+

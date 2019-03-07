@@ -10,14 +10,13 @@ PLEASE NOTE THAT WE ARE PASSING THE INFO OF THE DATA SET AS AN ADDITIONAL ARGUME
 import pickle
 from AutoML3_ingestion_program import data_converter
 from sklearn import clone
-from sklearn.impute import SimpleImputer
 import numpy as np   # We recommend to use numpy arrays
 from os.path import isfile
 import random
 import time
 from sklearn.metrics import accuracy_score
-from sklearn.ensemble import GradientBoostingClassifier
-from AutoML3_sample_code_submission import Adwin2
+from sklearn.linear_model import SGDClassifier
+from AutoML3_sample_code_submission.Adwin2 import Adwin2
 
 class Model:
     def __init__(self,datainfo,timeinfo):
@@ -34,13 +33,16 @@ class Model:
         print("[***] Overall time spent %5.2f sec" % overall_spenttime)        
         print("[***] Dataset time spent %5.2f sec" % dataset_spenttime)        
         self.num_train_samples=0
+        self.num_train_samples=0
         self.num_feat=1
         self.num_labels=1
         self.is_trained=False
-        #self.clf=svm.SVC()
-        #self.clf = SGDClassifier(loss="hinge", penalty="l2")
+        self.adwin2 = Adwin2()
+        self.clf_list = []
+        #self.clf=GaussianNB()
+        self.clf = SGDClassifier(loss="hinge", penalty="l2")
     #self.clf = linear_model.SGDClassifier()
-        self.clf = GradientBoostingClassifier(n_estimators=5, verbose=1, random_state=1, min_samples_split=10, warm_start = False)
+       # self.clf = GradientBoostingClassifier(n_estimators=5, verbose=1, random_state=1, min_samples_split=10, warm_start = False)
         # Here you may have parameters and hyper-parameters
 
     def fit(self, F, y, datainfo,timeinfo):
@@ -91,28 +93,33 @@ class Model:
                 num_train_samples=num_train_samples-rem_samples 
 
                 X = X[skip,:]
-                y = y[skip,:]   
-                self.num_train_samples = X.shape[0]  
+                y = y[skip,:]
+                self.num_train_samples = X.shape[0]
+
 
         if self.is_trained:
-            _ = self.clf.set_params(n_estimators=self.clf.n_estimators+1,warm_start=True);
+            #_ = self.clf.set_params(n_estimators=self.clf.n_estimators+1,warm_start=True);
             self.DataX=X;
             self.DataY=y;   
         else:
             self.DataX=X;
-            self.DataY=y;   
+            self.DataY=y;
         print ("The whole available data is: ")
         print(("Real-FIT: dim(X)= [{:d}, {:d}]").format(self.DataX.shape[0],self.DataX.shape[1]))
         print(("Real-FIT: dim(y)= [{:d}, {:d}]").format(self.DataY.shape[0], self.num_labels))
         #print "fitting with ..."
         #print self.clf.n_estimators
-        self.clf.fit(self.DataX,np.ravel(self.DataY))
-        predictY = self.clf.predict(self.DataX)
-        changeDetected = Adwin2.insertInput(accuracy_score(predictY, self.DataY))
-        print ("Change Detected:",changeDetected)
-        if changeDetected:
-            self.clf = clone(self.clf)
-            self.clf.partial_fit(self.DataY, self.DataY, classes=self.classes)
+        self.clf.fit(self.DataX, np.ravel(self.DataY))
+        for i in range(self.num_train_samples-100):
+            print("dim(X)",self.DataX[i,:].shape)
+            predictY = self.clf.predict(self.DataX[i,:].reshape(1, -1))
+
+            print("accuracy score",accuracy_score(predictY, self.DataY[i,:]))
+            changedetected = self.adwin2.insertInput(accuracy_score(predictY, self.DataY[i,:].reshape(1, -1)))
+            print ("Change Detected:",changedetected)
+            if changedetected:
+                self.clf = clone(self.clf)
+                self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel(), classes=np.unique(self.DataY))
 
 
 
@@ -160,7 +167,8 @@ class Model:
         if (self.num_feat != num_feat):
             print("ARRGH: number of features in X does not match training data!")
         print(("PREDICT: dim(y)= [{:d}, {:d}]").format(num_test_samples, self.num_labels))
-        y= self.clf.decision_function(X)
+        y= self.clf.predict(X)
+        np.errstate(divide='ignore', invalid='ignore')
         y= np.transpose(y)
         return y
 

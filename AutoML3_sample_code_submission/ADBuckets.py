@@ -22,3 +22,13 @@ class ADBuckets:
         if next is not None:
             self.next = next
             next.prev = self
+
+    def printBuckets(self):
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        for i in range(0,len(self.buckets)):
+            print("bucket i content capacity",i,self.buckets[i].content,self.buckets[i].capacity)
+        print("count,sum:",self.count,self.sum)
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+
+

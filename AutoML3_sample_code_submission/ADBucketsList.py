@@ -1,20 +1,21 @@
-
 from AutoML3_sample_code_submission.ADBuckets import *
 
 
 class ADBucketsList(object):
     """docstring for ADBucketsList."""
-    def __init__(self,M=5, head=None):
+    def __init__(self,M=3, head=None):
         super(ADBucketsList, self).__init__()
         self.head = head
         self.M=M
+        self.level = 0
         if self.head is None:
             self.head = ADBuckets(M+1,None,None)
 
 
     def addInputAtNextBucket(self,curr,next,value):
         if next is None:
-            next = ADBucket(self.M+1,curr)
+            self.level+=1
+            next = ADBuckets(self.M+1,curr)
 
         next.buckets[next.count] = value
         next.sum+=value.content
@@ -63,3 +64,12 @@ class ADBucketsList(object):
         deletedBucket = curr
         curr.prev.next = None
         return deletedBucket
+
+    def printBuckets(self):
+        n = self.head
+        i = 0
+        while (n is not None):
+            print('i', i)
+            n.printBuckets()
+            n = n.next
+            i += 1

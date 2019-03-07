@@ -6,5 +6,6 @@ class ADBucket(object):
         self.capacity = capacity
         self.content = content
 
+
     def incCapacity(self):
         self.capacity+=1
