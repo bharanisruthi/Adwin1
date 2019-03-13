@@ -1,5 +1,4 @@
 import math
-from scipy import stats
 from AutoML3_sample_code_submission.ADBucketsList import *
 
 class Adwin2:
@@ -10,9 +9,19 @@ class Adwin2:
         self.minT = 35
         self.delta = 0.02
         self.minWindowLength = 10
-        self.M = 2
+        self.M = 5
         self.adBucketsList = None
         self.windowSum = 0
+
+    def calculateVariance(self):
+        t = self.adBucketsList.head
+        variance = 0.0
+        mean = self.windowSum / self.windowLength
+        while t is not None:
+            variance += (t.count * t.level) * pow(mean, 2) + t.squareSum - (2*mean*t.sum)
+            t = t.next
+        return variance / (self.windowLength - 1)
+
 
     def insertInput(self, value):
         if self.adBucketsList is None:
@@ -21,17 +30,21 @@ class Adwin2:
         self.t += 1
         self.windowSum += value
         self.adBucketsList.addAnInput(value)
-        winDowMean = self.windowSum / self.windowLength
-        print()
         return self.isChangeDetected()
 
     def epsilon(self,n0,n1,delta):
         m = 1.0 / ((1.0 / n0) + (1.0 / n1))
         deltaDash = abs(delta)/(n0+n1)
-        logValue = math.log((4 /deltaDash))
-        epsiloncut = math.sqrt((1/(2*m))*logValue)
-        print("epsiloncut",epsiloncut)
-        return abs(delta) > epsiloncut
+        if deltaDash == 0:
+            return False
+        else:
+            logValue = float(math.log((2 /deltaDash)))
+            print("logValue",logValue)
+            winVariance = self.calculateVariance()
+            print("winVariance",winVariance)
+            epsiloncut = math.sqrt((2 / m) * winVariance * logValue) + ((2 / (3 * m)) * logValue)
+            print("epsiloncut",epsiloncut)
+            return abs(delta) > epsiloncut
 
     def isChangeDetected(self):
         isChanged = False

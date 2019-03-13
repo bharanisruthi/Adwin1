@@ -5,6 +5,7 @@ class ADBucket(object):
         super(ADBucket, self).__init__()
         self.capacity = capacity
         self.content = content
+        self.square  = pow(content,2)
 
 
     def incCapacity(self):

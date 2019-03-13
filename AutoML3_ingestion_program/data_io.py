@@ -168,7 +168,8 @@ def inventory_data_nodir(input_dir):
     
 def inventory_data_dir(input_dir):
     ''' Inventory data, assuming flat directory structure, assuming a directory hierarchy'''
-    training_names = ls(input_dir + '/*/*_train1.data') # This supports subdirectory structures obtained by concatenating bundles
+    training_names = ls(input_dir + '/*/*_train1.data')
+    print("string",input_dir + '/*/*_train1.data')# This supports subdirectory structures obtained by concatenating bundles
     for i in range(0,len(training_names)):
         name = training_names[i]
         training_names[i] = name[-name[::-1].index(filesep):-name[::-1].index('_')-1]

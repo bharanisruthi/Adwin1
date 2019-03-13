@@ -20,10 +20,11 @@ from os import getcwd as pwd
 from AutoML3_scoring_program  import libscores
 from AutoML3_scoring_program import my_metric
 import yaml
+from os.path import dirname, abspath
 from AutoML3_scoring_program.libscores import *
 
 # Default I/O directories:
-root_dir = "/Users/SruthiNaresh/Documents/NIPS/AutoML3_starting_kit"      # e.g. '../' or pwd()
+root_dir = dirname(dirname(abspath(__file__)))    # e.g. '../' or pwd()
 from os.path import join
 #default_solution_dir = join(root_dir, "AutoML3_sample_data/*/")
 default_solution_dir = join(root_dir, "AutoML3_sample_data")

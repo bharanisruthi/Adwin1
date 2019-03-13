@@ -3,7 +3,7 @@ from AutoML3_sample_code_submission.ADBuckets import *
 
 class ADBucketsList(object):
     """docstring for ADBucketsList."""
-    def __init__(self,M=3, head=None):
+    def __init__(self,M=6, head=None):
         super(ADBucketsList, self).__init__()
         self.head = head
         self.M=M
@@ -16,10 +16,12 @@ class ADBucketsList(object):
         if next is None:
             self.level+=1
             next = ADBuckets(self.M+1,curr)
+            next.level = value.capacity
 
         next.buckets[next.count] = value
         next.sum+=value.content
         next.count+=1
+        next.squareSum+=value.square
 
 
     def checkForCompression(self,head):
@@ -33,15 +35,19 @@ class ADBucketsList(object):
             compressedBucket = ADBucket(0,0.0)
             compressedBucket.content = b0.content + b1.content
             compressedBucket.capacity = b0.capacity+b1.capacity
+            compressedBucket.square = b0.square+b1.square
             self.addInputAtNextBucket(head, head.next, compressedBucket)
 
             for i in range(self.M-1):
                 head.buckets[i].content= head.buckets[i+2].content
                 head.buckets[i].capacity = head.buckets[i + 2].capacity
+                head.buckets[i].square = head.buckets[i+2].square
                 head.buckets[i+2].content = 0.0
                 head.buckets[i+2].capacity = 0
+                head.buckets[i + 2].square = 0
 
             head.count-=2
+            head.squareSum-=compressedBucket.square
             head.sum-=compressedBucket.content
 
         self.checkForCompression(head.next)
@@ -51,6 +57,8 @@ class ADBucketsList(object):
         self.head.buckets[self.head.count]= newBucket
         self.head.sum +=input
         self.head.count+=1
+        self.head.squareSum+=pow(input,2)
+        self.head.level = 1
         self.checkForCompression(self.head)
 
 

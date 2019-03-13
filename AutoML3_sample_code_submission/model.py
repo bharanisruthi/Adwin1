@@ -15,7 +15,9 @@ from os.path import isfile
 import random
 import time
 from sklearn.metrics import accuracy_score
-from sklearn.linear_model import SGDClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import  SGDClassifier
+from  sklearn.ensemble import GradientBoostingClassifier
 from AutoML3_sample_code_submission.Adwin2 import Adwin2
 
 class Model:
@@ -40,9 +42,9 @@ class Model:
         self.adwin2 = Adwin2()
         self.clf_list = []
         #self.clf=GaussianNB()
-        self.clf = SGDClassifier(loss="hinge", penalty="l2")
-    #self.clf = linear_model.SGDClassifier()
-       # self.clf = GradientBoostingClassifier(n_estimators=5, verbose=1, random_state=1, min_samples_split=10, warm_start = False)
+        #self.clf = SGDClassifier(loss="hinge", penalty="l2")
+        self.clf = SGDClassifier(max_iter=1000, tol=1e-3,loss="hinge", penalty="l2")
+        #self.clf = GradientBoostingClassifier(n_estimators=5, verbose=1, random_state=1, min_samples_split=10, warm_start = False)
         # Here you may have parameters and hyper-parameters
 
     def fit(self, F, y, datainfo,timeinfo):
@@ -109,18 +111,20 @@ class Model:
         print(("Real-FIT: dim(y)= [{:d}, {:d}]").format(self.DataY.shape[0], self.num_labels))
         #print "fitting with ..."
         #print self.clf.n_estimators
-        self.clf.fit(self.DataX, np.ravel(self.DataY))
-        for i in range(self.num_train_samples-100):
+
+        self.clf.fit(self.DataX[:500], np.ravel(self.DataY[:500]))
+        for i in range(self.num_train_samples-500):
             print("dim(X)",self.DataX[i,:].shape)
             predictY = self.clf.predict(self.DataX[i,:].reshape(1, -1))
-
+            print("y,predictY:",self.DataY[i,:],predictY)
             print("accuracy score",accuracy_score(predictY, self.DataY[i,:]))
             changedetected = self.adwin2.insertInput(accuracy_score(predictY, self.DataY[i,:].reshape(1, -1)))
             print ("Change Detected:",changedetected)
             if changedetected:
                 self.clf = clone(self.clf)
                 self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel(), classes=np.unique(self.DataY))
-
+            else:
+                self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel())
 
 
         #print "Model fitted.."
@@ -151,6 +155,7 @@ class Model:
         # only get numerical variables
         X=F['numerical']
 
+
         
         # get numerical variables, concatenate them with categorical variables 
         # catnumeric_dataset=np.array(CAT)
@@ -168,6 +173,7 @@ class Model:
             print("ARRGH: number of features in X does not match training data!")
         print(("PREDICT: dim(y)= [{:d}, {:d}]").format(num_test_samples, self.num_labels))
         y= self.clf.predict(X)
+        print("Y",y)
         np.errstate(divide='ignore', invalid='ignore')
         y= np.transpose(y)
         return y

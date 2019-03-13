@@ -11,5 +11,5 @@ for j in range(0,500):
     l.append(random.uniform(1,100))
 
 for i in range(0,999):
-    print('iteration',l[i])
+    print('iteration',i)
     print(adwin.insertInput(l[i]))

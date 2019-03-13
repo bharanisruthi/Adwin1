@@ -10,6 +10,8 @@ class ADBuckets:
         self.next = None
         self.count=0
         self.sum =0.0
+        self.squareSum=0.0
+        self.level=0
 
         for i in range(size):
             self.buckets[i] = ADBucket(0,0)
@@ -27,7 +29,7 @@ class ADBuckets:
         print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         for i in range(0,len(self.buckets)):
             print("bucket i content capacity",i,self.buckets[i].content,self.buckets[i].capacity)
-        print("count,sum:",self.count,self.sum)
+        print("count,sum,level,squareSum:",self.count,self.sum,self.level,self.squareSum)
         print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 
