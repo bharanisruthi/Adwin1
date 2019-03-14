@@ -108,7 +108,7 @@ from os.path import join
 
 
 
-root_dir = "/Users/SruthiNaresh/Documents/NIPS/AutoML3_starting_kit"# e.g. '../' or pwd()
+root_dir = pwd()
 print(root_dir)
 default_input_dir = join(root_dir, "AutoML3_sample_data")
 default_output_dir = join(root_dir, "AutoML3_sample_predictions")
