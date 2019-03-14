@@ -99,8 +99,6 @@ class Model:
 
                 X = X[skip,:]
                 y = y[skip,:]
-                xDash = XDash[filteredIndex,:]
-                yDash = yDash[filteredIndex,:]
                 self.num_train_samples = X.shape[0]
 
 
