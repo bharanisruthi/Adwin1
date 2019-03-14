@@ -99,6 +99,7 @@ class Model:
 
                 X = X[skip,:]
                 y = y[skip,:]
+                """ Data  to initialize the fit"""
                 xDash = XDash[filteredIndex,:]
                 yDash = yDash[filteredIndex,:]
                 self.num_train_samples = X.shape[0]
@@ -117,6 +118,8 @@ class Model:
         print(("Real-FIT: dim(y)= [{:d}, {:d}]").format(self.DataY.shape[0], self.num_labels))
         #print "fitting with ..."
         #print self.clf.n_estimators
+        
+        """If we are detecting change in the data stream, we are doing parital fit and initializing classes again """
         print("np.unique(self.DataY)",np.unique(self.DataY,return_counts=True))
         self.clf.fit(xDash, np.ravel(yDash))
         for i in range(self.num_train_samples):
@@ -125,7 +128,6 @@ class Model:
             print("y,predictY:",self.DataY[i,:],predictY)
             print("accuracy score",accuracy_score(predictY, self.DataY[i,:]))
             changedetected = self.adwin2.insertInput(accuracy_score(predictY, self.DataY[i,:].reshape(1, -1)))
-            """If we are detecting change in the data stream, we are doing parital fit """
             print ("Change Detected:",changedetected)
             if changedetected:
                 self.clf = clone(self.clf)
