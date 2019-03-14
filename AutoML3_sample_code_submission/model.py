@@ -8,7 +8,7 @@ You must supply at least 4 methods:
 PLEASE NOTE THAT WE ARE PASSING THE INFO OF THE DATA SET AS AN ADDITIONAL ARGUMENT! 
 '''
 import pickle
-from AutoML3_ingestion_program import data_converter
+import data_converter
 from sklearn import clone
 import numpy as np   # We recommend to use numpy arrays
 from os.path import isfile
@@ -18,7 +18,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import  SGDClassifier
 from  sklearn.ensemble import GradientBoostingClassifier
-from AutoML3_sample_code_submission.Adwin2 import Adwin2
+from Adwin2 import Adwin2
 
 class Model:
     def __init__(self,datainfo,timeinfo):
