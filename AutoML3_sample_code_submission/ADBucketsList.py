@@ -6,7 +6,7 @@ Steps to insert an input:
     
     The buckets are set in different levels of pow(2,i) from i=0
     
-    We also define a parameter, M , it is used to tune the memory utilization. Here we have used M=5. 
+    Then we check for compression. We define a parameter, M , it is used to tune the memory utilization. Here we have used M=5. 
     It means at a level i, we can only have 5 buckets. In case, it exceeds we aggregate the oldest buckets to next level.
 Example:
      Below is an example of the algorithm:
