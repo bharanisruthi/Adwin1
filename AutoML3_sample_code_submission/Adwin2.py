@@ -116,11 +116,6 @@ class Adwin2:
 
     def isChangeDetected(self):
         isChanged = False
-        print('--------------------------------------------------------------------------')
-        print('t:', self.t)
-        print('windowLength:', self.windowLength)
-        self.adBucketsList.printBuckets()
-        print('--------------------------------------------------------------------------')
         if (self.t % self.minT == 0 and self.windowLength >= self.minWindowLength):
             reducedWindowLengthFlag = True
             while (reducedWindowLengthFlag):
@@ -139,12 +134,10 @@ class Adwin2:
                         for i in range(buckets.count-1,-1,-1):
                             n0 += bucketsList[i].capacity
                             n1 -= bucketsList[i].capacity
-                            print("n0",n0)
-                            print("n1",n1)
+                           
                             sum0 += bucketsList[i].content
                             sum1 -= bucketsList[i].content
-                            print("sum0", sum0)
-                            print("sum1", sum1)
+                          
                             #mudiff=0.0
                             if n1 is not 0 and n0 is not 0:
                                 mudiff = (sum0 / n0) - (sum1 / n1)
