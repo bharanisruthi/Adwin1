@@ -125,6 +125,7 @@ class Model:
             print("y,predictY:",self.DataY[i,:],predictY)
             print("accuracy score",accuracy_score(predictY, self.DataY[i,:]))
             changedetected = self.adwin2.insertInput(accuracy_score(predictY, self.DataY[i,:].reshape(1, -1)))
+            """If we are detecting change in the data stream, we are doing parital fit """
             print ("Change Detected:",changedetected)
             if changedetected:
                 self.clf = clone(self.clf)
