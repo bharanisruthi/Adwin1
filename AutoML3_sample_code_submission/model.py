@@ -78,6 +78,8 @@ class Model:
 
         # convert NaN to zeros
         X = data_converter.replace_missing(X)
+        XDash = X
+        yDash =y
         #imputer = SimpleImputer(missing_values='NaN', strategy='constant', fill_value=0)
         #X= imputer.transform(X)
         #print "This batch of data has: "
@@ -91,12 +93,16 @@ class Model:
         removeperc=0.9
         if removeperc>0:
                 rem_samples=int(num_train_samples*removeperc)
-                skip = sorted(random.sample(range(num_train_samples),num_train_samples-rem_samples)) 
+                skip = sorted(random.sample(range(num_train_samples),num_train_samples-rem_samples))
+                filteredIndex = list(set(range(0, num_train_samples)) - set(skip))
                 num_train_samples=num_train_samples-rem_samples 
 
                 X = X[skip,:]
                 y = y[skip,:]
+                xDash = XDash[filteredIndex,:]
+                yDash = yDash[filteredIndex,:]
                 self.num_train_samples = X.shape[0]
+
 
 
         if self.is_trained:
@@ -111,9 +117,9 @@ class Model:
         print(("Real-FIT: dim(y)= [{:d}, {:d}]").format(self.DataY.shape[0], self.num_labels))
         #print "fitting with ..."
         #print self.clf.n_estimators
-
-        self.clf.fit(self.DataX[:500], np.ravel(self.DataY[:500]))
-        for i in range(self.num_train_samples-500):
+        print("np.unique(self.DataY)",np.unique(self.DataY,return_counts=True))
+        self.clf.fit(xDash, np.ravel(yDash))
+        for i in range(self.num_train_samples):
             print("dim(X)",self.DataX[i,:].shape)
             predictY = self.clf.predict(self.DataX[i,:].reshape(1, -1))
             print("y,predictY:",self.DataY[i,:],predictY)
@@ -124,7 +130,7 @@ class Model:
                 self.clf = clone(self.clf)
                 self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel(), classes=np.unique(self.DataY))
             else:
-                self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel())
+               self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel())
 
 
         #print "Model fitted.."
