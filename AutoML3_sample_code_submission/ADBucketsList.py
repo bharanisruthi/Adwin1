@@ -1,3 +1,33 @@
+'''
+We implemented the buckets as a linked list with head pointing to the buckets in level 0
+Steps to insert an input:
+    We store the input in buckets, that store the content and capacity. Content is the sum of real numbers 
+    and capacity tells us how many real numbers are aggregated in a bucket.
+    
+    The buckets are set in different levels of pow(2,i) from i=0
+    
+    We also define a parameter, M , it is used to tune the memory utilization. Here we have used M=5. 
+    It means at a level i, we can only have 5 buckets. In case, it exceeds we aggregate the oldest buckets to next level.
+Example:
+     Below is an example of the algorithm:
+    Inputs: [1,2,3] for t = t0 to t2. and M=2
+        For t0:
+            Input = 1
+            content:[1]
+            capcity:[1]
+        For t1:
+            Input = 2
+            content:[1][2]
+            capcity:[1][1]
+        For t2:
+            Input = 3
+            content:[1][2][3]
+            capcity:[1][1][1]
+            Since M=2 , we compress the oldest two buckets
+            content:[3] [3]
+            capcity:[1] [2]
+'''
+
 from AutoML3_sample_code_submission.ADBuckets import *
 
 
