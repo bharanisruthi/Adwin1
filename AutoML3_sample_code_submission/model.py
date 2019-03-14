@@ -132,8 +132,7 @@ class Model:
             if changedetected:
                 self.clf = clone(self.clf)
                 self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel(), classes=np.unique(self.DataY))
-            else:
-               self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel())
+
 
 
         #print "Model fitted.."
