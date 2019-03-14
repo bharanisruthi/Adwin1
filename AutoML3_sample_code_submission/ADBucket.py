@@ -1,5 +1,5 @@
 class ADBucket(object):
-   """create a new Bucket."""
+
 
     def __init__(self, capacity=0, content=0.0):
         
