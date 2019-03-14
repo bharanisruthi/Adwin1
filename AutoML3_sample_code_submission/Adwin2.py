@@ -72,12 +72,12 @@ from AutoML3_sample_code_submission.ADBucketsList import *
 class Adwin2:
     def __init__(self, delta=0.002, max_buckets=5, min_clock=32, min_win_len=10, min_sub_win_len=5):
         self.windowLength = 0
-        self.minSubWindowLength = 5
+        self.minSubWindowLength = min_sub_win_len
         self.t=0
-        self.minT = 35
-        self.delta = 0.02
-        self.minWindowLength = 10
-        self.M = 5
+        self.minT = min_clock
+        self.delta = delta
+        self.minWindowLength = min_win_len
+        self.M = max_buckets
         self.adBucketsList = None
         self.windowSum = 0
 
@@ -148,7 +148,7 @@ class Adwin2:
                             #mudiff=0.0
                             if n1 is not 0 and n0 is not 0:
                                 mudiff = (sum0 / n0) - (sum1 / n1)
-                            if n0 > self.minWindowLength  and n1 > self.minWindowLength and self.epsilon(n0, n1, mudiff):
+                            if self.t% self.minT ==0 and n0 > self.minWindowLength  and n1 > self.minWindowLength and self.epsilon(n0, n1, mudiff):
                                 deletedBucket = self.adBucketsList.deleteLastBucket()
                                 self.windowLength -= deletedBucket.count
                                 self.windowSum -= deletedBucket.sum
