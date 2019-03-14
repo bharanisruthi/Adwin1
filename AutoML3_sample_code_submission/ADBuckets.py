@@ -1,5 +1,5 @@
 
-from AutoML3_sample_code_submission.ADBucket import ADBucket
+from ADBucket import ADBucket
 
 """
         Initialize all buckets and print the content of buckets, level and sum
