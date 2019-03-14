@@ -28,8 +28,8 @@ from AutoML3_scoring_program.libscores import *
 #root_dir = dirname(dirname(abspath(__file__)))
 root_dir = pwd()   #  e.g. '../' or pwd()
 from os.path import join
-#default_solution_dir = join(root_dir, "AutoML3_sample_data/*/")
-default_solution_dir = join(root_dir, "AutoML3_sample_data")
+default_solution_dir = join(root_dir, "AutoML3_sample_data/*/")
+#default_solution_dir = join(root_dir, "AutoML3_sample_data")
 default_prediction_dir = join(root_dir, "AutoML3_sample_predictions")
 default_score_dir = join(root_dir, "AutoML3_scoring_output")
 print("default_solution_dir",default_solution_dir)
