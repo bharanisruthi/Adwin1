@@ -25,8 +25,8 @@ from os.path import dirname, abspath
 from AutoML3_scoring_program.libscores import *
 
 # Default I/O directories:
-root_dir = dirname(dirname(abspath(__file__)))
-#root_dir = pwd()   #  e.g. '../' or pwd()
+#root_dir = dirname(dirname(abspath(__file__)))
+root_dir = pwd()   #  e.g. '../' or pwd()
 from os.path import join
 #default_solution_dir = join(root_dir, "AutoML3_sample_data/*/")
 default_solution_dir = join(root_dir, "AutoML3_sample_data")
