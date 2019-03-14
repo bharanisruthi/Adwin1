@@ -28,7 +28,7 @@ Example:
             capcity:[1] [2]
 '''
 
-from AutoML3_sample_code_submission.ADBuckets import *
+from ADBuckets import *
 
 
 class ADBucketsList(object):
