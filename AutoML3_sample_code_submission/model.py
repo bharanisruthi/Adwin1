@@ -90,7 +90,7 @@ class Model:
         if y.ndim>1: self.num_labels = y.shape[1]
         #print("FIT: dim(y)= [{:d}, {:d}]").format(num_train_samples, self.num_labels)
     # subsample the data for efficient processing
-        removeperc=0.9
+        removeperc=0.6
         if removeperc>0:
                 rem_samples=int(num_train_samples*removeperc)
                 skip = sorted(random.sample(range(num_train_samples),num_train_samples-rem_samples))
@@ -99,7 +99,6 @@ class Model:
 
                 X = X[skip,:]
                 y = y[skip,:]
-                """ Data  to initialize the fit"""
                 xDash = XDash[filteredIndex,:]
                 yDash = yDash[filteredIndex,:]
                 self.num_train_samples = X.shape[0]
@@ -118,21 +117,22 @@ class Model:
         print(("Real-FIT: dim(y)= [{:d}, {:d}]").format(self.DataY.shape[0], self.num_labels))
         #print "fitting with ..."
         #print self.clf.n_estimators
-        
-        """If we are detecting change in the data stream, we are doing parital fit and initializing classes again """
         print("np.unique(self.DataY)",np.unique(self.DataY,return_counts=True))
-        self.clf.fit(xDash, np.ravel(yDash))
-        for i in range(self.num_train_samples):
-            print("dim(X)",self.DataX[i,:].shape)
-            predictY = self.clf.predict(self.DataX[i,:].reshape(1, -1))
-            print("y,predictY:",self.DataY[i,:],predictY)
-            print("accuracy score",accuracy_score(predictY, self.DataY[i,:]))
-            changedetected = self.adwin2.insertInput(accuracy_score(predictY, self.DataY[i,:].reshape(1, -1)))
-            print ("Change Detected:",changedetected)
-            if changedetected:
-                self.clf = clone(self.clf)
-                self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel(), classes=np.unique(self.DataY))
-
+        if not self.is_trained:
+            self.clf.fit(self.DataX, np.ravel(self.DataY))
+        else:
+            for i in range(self.num_train_samples):
+                print("dim(X)",self.DataX[i,:].shape)
+                predictY = self.clf.predict(self.DataX[i,:].reshape(1, -1))
+                print("y,predictY:",self.DataY[i,:],predictY)
+                print("accuracy score",accuracy_score(predictY, self.DataY[i,:]))
+                changedetected = self.adwin2.insertInput(accuracy_score(predictY, self.DataY[i,:].reshape(1, -1)))
+                print ("Change Detected:",changedetected)
+                if changedetected:
+                    self.clf = clone(self.clf)
+                    self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel(), classes=np.unique(self.DataY))
+            # else:
+            #    self.clf.partial_fit(self.DataX[i,:].reshape(1, -1), self.DataY[i,:].reshape(1, -1).ravel())
 
 
         #print "Model fitted.."
