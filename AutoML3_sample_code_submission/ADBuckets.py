@@ -1,6 +1,9 @@
 
 from AutoML3_sample_code_submission.ADBucket import ADBucket
 
+"""
+        Initialize all buckets and print the content of buckets, level and sum
+"""
 class ADBuckets:
 
     def __init__(self,size=6,prev=None,next=None):
