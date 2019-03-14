@@ -38,8 +38,11 @@ print("default_solution_dir",default_solution_dir)
 debug_mode = 1
 verbose = True
 
-for filename in glob2.iglob(root_dir + '**/*', recursive=True):
-     print(filename)
+try:
+    for root, subdirs, files in os.walk(root_dir):
+        print("root, subdirs, files",root, subdirs, files)
+except:
+    print("moving on")
 
 # Constant used for a missing score
 missing_score = -0.9999
